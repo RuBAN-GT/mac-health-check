@@ -28,7 +28,7 @@ git clone git@github.com:RuBAN-GT/mac-health-check-skill.git ~/.openclaw/skills/
 ## What is included
 
 - `SKILL.md`
-- `bin/macmon-safe`
+- `bin/macmon-safe.sh`
 - `scripts/macmon_status.py`
 - `scripts/test_macmon_status.py`
 - `references/sample-output.md`
@@ -46,14 +46,14 @@ brew install macmon
 
 The skill metadata also declares a brew installer, so OpenClaw's macOS Skills UI can surface an `Install macmon (brew)` button when `macmon` is missing.
 
-In some OpenClaw exec environments, Homebrew-installed binaries work only from a login shell. This repo includes `bin/macmon-safe`, a small wrapper that retries `macmon` through `zsh -lic` when needed.
+In some OpenClaw exec environments, Homebrew-installed binaries work only from a login shell. This repo includes `bin/macmon-safe.sh`, a small wrapper that retries `macmon` through `zsh -lic` when needed.
 
 ## Verify setup
 
 Run:
 
 ```bash
-bin/macmon-safe pipe -s 1
+bash bin/macmon-safe.sh pipe -s 1
 ```
 
 If that prints a JSON object, the skill is ready to use.
