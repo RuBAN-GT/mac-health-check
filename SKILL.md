@@ -1,6 +1,6 @@
 ---
 name: mac-health-check
-description: Check your Mac's current temperature, load, memory, swap, and power usage with `macmon`.
+description: Check the current temperature, load, memory, swap, and power usage of this Mac with `macmon`. Use when the user asks for their Mac's current temperature, Mac mini temperature, thermal state, machine health snapshot, or current CPU/GPU/RAM usage.
 homepage: https://github.com/vladkens/macmon
 metadata:
   {
@@ -28,6 +28,15 @@ metadata:
 Use `macmon` as the source of truth for live Mac telemetry.
 
 OpenClaw's host exec environment can be too minimal for some Homebrew-installed binaries. This skill includes a wrapper at `{baseDir}/bin/macmon-safe.sh` that retries `macmon` through `zsh -lic` when needed.
+
+## Use when
+
+- "What's my Mac temperature right now?"
+- "What's the temperature of my Mac?"
+- "Give me a health check for this Mac"
+- "How much RAM and swap is in use?"
+- "Is this Mac under load right now?"
+- "Show current CPU or GPU usage on this Mac"
 
 ## Installation
 
