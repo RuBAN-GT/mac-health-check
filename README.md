@@ -11,6 +11,20 @@ It helps an agent answer questions like:
 
 The skill wraps `macmon pipe -s 1` and turns a raw telemetry sample into a short, practical summary.
 
+## Installation
+
+### Via ClawHub
+
+```bash
+clawhub install mac-health-check
+```
+
+### Manual
+
+```bash
+git clone git@github.com:RuBAN-GT/mac-health-check-skill.git ~/.openclaw/skills/mac-health-check
+```
+
 ## What is included
 
 - `SKILL.md`
@@ -55,26 +69,6 @@ Build a `.skill` archive from the skill root:
 ```bash
 mkdir -p dist
 zip -r dist/mac-health-check.skill .
-```
-
-## Publishing
-
-### GitHub
-
-Publish the `mac-health-check` folder as a normal GitHub repository.
-
-### ClawHub
-
-You can publish from the skill folder with `clawdhub publish` or upload a prebuilt `.skill` archive, depending on your workflow.
-
-Typical CLI flow:
-
-```bash
-  clawhub publish . \
-  --slug mac-health-check \
-  --name "Mac Health Check" \
-  --version 1.0.0 \
-  --changelog "Initial release"
 ```
 
 ## Notes

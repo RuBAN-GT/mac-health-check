@@ -1,6 +1,6 @@
 ---
 name: mac-health-check
-description: Read live macOS temperature, CPU/GPU load, memory, swap, and power metrics from `macmon pipe -s 1`. Use when the user asks for current Mac temperature, thermal state, CPU/GPU usage, RAM/swap usage, or a quick machine-health snapshot on a Mac with `macmon` installed.
+description: Check your Mac's current temperature, load, memory, swap, and power usage with `macmon`.
 homepage: https://github.com/vladkens/macmon
 metadata:
   {
@@ -26,6 +26,20 @@ metadata:
 # Mac Health Check
 
 Use `macmon` as the source of truth for live Mac telemetry.
+
+## Installation
+
+### Via ClawHub
+
+```bash
+clawhub install mac-health-check
+```
+
+### Manual
+
+```bash
+git clone https://github.com/RuBAN-GT/mac-health-check-skill.git ~/.openclaw/skills/mac-health-check
+```
 
 ## Quick start
 
