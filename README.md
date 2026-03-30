@@ -22,7 +22,7 @@ clawhub install mac-health-check
 ### Manual
 
 ```bash
-git clone git@github.com:RuBAN-GT/mac-health-check-skill.git ~/.openclaw/skills/mac-health-check
+git clone https://github.com/RuBAN-GT/mac-health-check-skill.git ~/.openclaw/skills/mac-health-check
 ```
 
 ## What is included

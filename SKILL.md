@@ -8,7 +8,6 @@ metadata:
       {
         "emoji": "🌡️",
         "os": ["darwin"],
-        "requires": { "bins": ["macmon"] },
         "install":
           [
             {
