@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import shutil
 import subprocess
 import sys
@@ -20,24 +21,55 @@ def load_payload(raw: str) -> dict[str, Any]:
 
 
 def run_macmon(interval_ms: int) -> dict[str, Any]:
-    binary = shutil.which("macmon")
-    if not binary:
-        raise RuntimeError("macmon not found on PATH.")
-
+    binary = shutil.which("macmon") or "/opt/homebrew/bin/macmon"
     cmd = [binary, "pipe", "-s", "1", "-i", str(interval_ms)]
+
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=15)
+    except FileNotFoundError:
+        proc = run_macmon_via_login_shell(interval_ms)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("macmon timed out.") from exc
+    except subprocess.CalledProcessError as exc:
+        stderr = (exc.stderr or "").strip()
+        suffix = f": {stderr}" if stderr else ""
+        if should_retry_in_login_shell(stderr):
+            proc = run_macmon_via_login_shell(interval_ms)
+        else:
+            raise RuntimeError(f"macmon failed{suffix}") from exc
+
+    lines = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    if not lines:
+        raise RuntimeError("macmon returned no output.")
+    return load_payload(lines[-1])
+
+
+def should_retry_in_login_shell(stderr: str) -> bool:
+    normalized = stderr.lower()
+    return "no such file or directory" in normalized
+
+
+def run_macmon_via_login_shell(interval_ms: int) -> subprocess.CompletedProcess[str]:
+    shell = shutil.which("zsh") or "/bin/zsh"
+    binary = shutil.which("macmon") or "/opt/homebrew/bin/macmon"
+    shell_cmd = f"{shlex.quote(binary)} pipe -s 1 -i {int(interval_ms)}"
+
+    try:
+        return subprocess.run(
+            [shell, "-lic", shell_cmd],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=20,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError("macmon not found on PATH, and zsh login-shell fallback is unavailable.") from exc
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError("macmon timed out.") from exc
     except subprocess.CalledProcessError as exc:
         stderr = (exc.stderr or "").strip()
         suffix = f": {stderr}" if stderr else ""
         raise RuntimeError(f"macmon failed{suffix}") from exc
-
-    lines = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
-    if not lines:
-        raise RuntimeError("macmon returned no output.")
-    return load_payload(lines[-1])
 
 
 def load_from_input(path: str) -> dict[str, Any]:

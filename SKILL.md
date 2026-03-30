@@ -27,6 +27,8 @@ metadata:
 
 Use `macmon` as the source of truth for live Mac telemetry.
 
+OpenClaw's host exec environment can be too minimal for some Homebrew-installed binaries. This skill includes a wrapper at `{baseDir}/bin/macmon-safe` that retries `macmon` through `zsh -lic` when needed.
+
 ## Installation
 
 ### Via ClawHub
@@ -51,16 +53,26 @@ python {baseDir}/scripts/macmon_status.py
 
 Default one-shot mode uses `-i 200` so the first sample returns faster.
 
-For raw JSON:
+If `macmon` works only from a login shell in your OpenClaw setup, you can also use the wrapper directly:
+
+```bash
+{baseDir}/bin/macmon-safe pipe -s 1
+```
+
+### Raw JSON
+
+For raw JSON, run:
 
 ```bash
 python {baseDir}/scripts/macmon_status.py --format json --pretty
 ```
 
-For saved `macmon` output or stdin:
+### Saved output or stdin
+
+For saved `macmon` output or stdin, run:
 
 ```bash
-macmon pipe -s 1 > /tmp/macmon.jsonl
+{baseDir}/bin/macmon-safe pipe -s 1 > /tmp/macmon.jsonl
 python {baseDir}/scripts/macmon_status.py --input /tmp/macmon.jsonl
 cat /tmp/macmon.jsonl | python {baseDir}/scripts/macmon_status.py --input -
 ```
@@ -70,7 +82,7 @@ cat /tmp/macmon.jsonl | python {baseDir}/scripts/macmon_status.py --input -
 Run:
 
 ```bash
-macmon pipe -s 1
+{baseDir}/bin/macmon-safe pipe -s 1
 ```
 
 If this prints a JSON sample, the skill is ready to use.
@@ -103,7 +115,8 @@ Do not overclaim danger from one sample. Call it a snapshot.
 ## Failure modes
 
 - If `macmon` is missing, say so plainly.
-- If `macmon` is installed but errors out, ask the user to run `macmon pipe -s 1` manually and paste the JSON.
+- If `macmon` is installed but errors out, ask the user to run `{baseDir}/bin/macmon-safe pipe -s 1` manually and paste the JSON.
+- On some macOS setups, Homebrew-installed binaries work only from a login shell. Prefer `{baseDir}/bin/macmon-safe` in OpenClaw exec contexts.
 - When reading from files or stdin, treat the last non-empty line as the sample.
 
 ## Reference
